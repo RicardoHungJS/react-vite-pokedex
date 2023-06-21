@@ -1,6 +1,8 @@
 const HeaderComponent = () => {
     return (
-        <h1>Soy el header</h1>
+        <header>
+            <h1>Construyendo el header</h1>
+        </header>
     )
 }
 
