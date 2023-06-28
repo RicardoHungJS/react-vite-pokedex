@@ -1,13 +1,14 @@
 import './App.css'
 import HeaderComponent from './components/header/header'
+import PokeSideBar from './components/pokeSideBar/pokeSideBar';
 
 function App() {
-  return (
-    <>
-      <HeaderComponent />
-      <h1>Hola mundo</h1>
-    </>
-  )
+    return (
+        <div className='relative'>
+            <HeaderComponent />
+            {/* <PokeSideBar /> */}
+        </div >
+    );
 }
 
 export default App
