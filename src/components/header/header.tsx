@@ -1,13 +1,14 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import useFetch from "../../hooks/useFetch";
 import { ApiResponse } from "../../interfaces/apiResponse";
 
 const HeaderComponent = () => {
 
     const { data, error }: ApiResponse = useFetch('https://pokeapi.co/api/v2/pokedex/');
+    const [listData, setListData] = useState([]);
 
     useEffect(() => {
-        console.log(data.results);
+        console.log(data);
     }, [data])
 
     return (
