@@ -4,9 +4,9 @@ import PokeSideBar from './components/pokeSideBar/pokeSideBar';
 
 function App() {
     return (
-        <div className='relative'>
+        <div className='flex'>
+            <PokeSideBar />
             <HeaderComponent />
-            {/* <PokeSideBar /> */}
         </div >
     );
 }
