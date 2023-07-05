@@ -4,7 +4,7 @@ import useFetch from '../../hooks/useFetch';
 import { fetchHelper } from '../../helpers/fetchHelper';
 
 function PokeSideBar() {
-  const { data, error }: ApiResponse = useFetch('https://pokeapi.co/api/v2/pokemon/?offset=0&limit=151');
+  const { data, error }: ApiResponse = useFetch('https://pokeapi.co/api/v2/pokedex/2/');
   const [imageUrl, setImageUrl] = useState<Array<any>>([]);
   const [openSideBar, setOpenSideBar] = useState<boolean>(false);
   const [searchPokemon, setSearchPokemon] = useState<string>('');
@@ -17,11 +17,11 @@ function PokeSideBar() {
     if (data !== null && data.length !== 0) {
       const fetchPokemonImages = async () => {
         const imageUrls = await Promise.all(
-          data?.results.map(async (pkmon: any) => {
-            const auxResponse = await fetchHelper(pkmon.url);
-
-            if (auxResponse.data !== null) {
-              return auxResponse.data?.sprites?.other['official-artwork']?.front_default
+          data?.pokemon_entries.map(async (pkmon: any) => {
+            const auxFirstResponse = await fetchHelper(pkmon.pokemon_species.url);
+            const auxSecondResponse = await fetchHelper(auxFirstResponse.data.varieties[0].pokemon.url);
+            if (auxSecondResponse.data !== null) {
+              return auxSecondResponse.data?.sprites?.front_default
             } else {
               throw new Error("No images found");
             }
@@ -37,8 +37,6 @@ function PokeSideBar() {
     const sideBar = sideBarRef?.current?.classList;
     const imageBox = imageBoxRef.current;
     const sideBarButton = sideBarButtonRef.current?.classList;
-
-    console.log('Hola mundo');
 
     if (openSideBar) {
       sideBarButton?.remove('left-0');
@@ -69,7 +67,7 @@ function PokeSideBar() {
     if (searchPokemon !== '') {
       const debounceTimer = setTimeout(() => {
         console.log(searchPokemon);
-      }, 500);
+      }, 1000);
 
       return () => clearTimeout(debounceTimer);
     }
@@ -88,18 +86,18 @@ function PokeSideBar() {
   }
 
   return (
-    <aside className=''>
-      <div className={`top-0 w-0 h-screen overflow-y-auto overflow-x-hidden transition-all duration-300 bg-gray-200 flex flex-col items-center py-4 opacity-0 ease-linear`} ref={sideBarRef}>
+    <aside>
+      <div className={`scrollStyled top-0 w-0 h-screen overflow-y-auto overflow-x-hidden transition-all duration-300 bg-gray-200 flex flex-col items-center py-4 opacity-0 ease-linear`} ref={sideBarRef}>
         <div className='w-full h-fit grid place-items-center pb-3 justify-self-start'>
-          <input className='h-9 w-11/12 rounded px-2 py-1 shadow-[3px_3px_40px_-10px_#828282] outline-none' autoComplete='off' type="text" name="search" placeholder='Search Pokemon' onChange={(e) => searchPokemonEvent(e.target.value)} />
-          <label className='flex justify-center items-center text-xs w-11/12 text-red-800 mt-2'>{`${searchPokemon} is not in this list `}<span className='m text-lg'>😥</span></label>
+          <input className='h-9 w-11/12 rounded px-2 py-1 shadow-[3px_3px_20px_-10px_#828282] outline-none' autoComplete='off' type="text" name="search" placeholder='Search Pokemon' onChange={(e) => searchPokemonEvent(e.target.value)} />
+          <label className='flex justify-center items-center text-xs w-11/12 text-red-800 mt-2'>Searched pokemon is not in this list<span className='m text-lg'>😥</span></label>
         </div>
         {
-          data?.results?.map((pokemon: any, indx: number) => {
+          data?.pokemon_entries?.map((pokemon: any, indx: number) => {
             return (
-              <div className='flex justify-between items-center flex-wrap group hover:bg-gray-300 cursor-pointer transition-all duration-200 py-2 w-3/4 h-28' key={`key-${indx}`} ref={(element) => (imageBoxRef.current[indx] = element)}>
-                <p className='text-2xl flex justify-center items-center font-bold my-2'>{pokemon?.name}</p>
-                {imageUrl.length > 0 ? <img className='aspect-auto transition-all duration-300 h-12' src={imageUrl[indx]} alt="pokemon image" /> : <></>}
+              <div className='flex rounded-md px-4 my-1 justify-between items-center flex-wrap group hover:bg-gray-300 hover:shadow-[3px_3px_16px_-10px_#828282] group cursor-pointer hover:peer-[2]:scale-125 transition-all duration-200 py-2 w-11/12 h-28' key={`key-${indx}`} ref={(element) => (imageBoxRef.current[indx] = element)}>
+                <p className='flex justify-center items-center font-bold my-2 transition-all duration-100 group-hover:text-xl group-hover:text-gray-600'>{pokemon?.pokemon_species.name.toUpperCase()}</p>
+                {imageUrl.length > 0 ? <img className='transition-all duration-100 h-14 group-hover:scale-150' src={imageUrl[indx]} alt="pokemon image" /> : <></>}
               </div>
             )
           })

@@ -15,10 +15,6 @@ const arrayPrueba = [
 
 function Dropdown({ placeholder, results = arrayPrueba, onSelect }: dropdownProps) {
 
-  const handlerSelect = (url: string) => {
-    onSelect(url);
-  }
-
   return (
     <div className={`${placeholder} w-64 h-10`}>
       <p className="flex pl-4 items-center w-full h-10 bg-white font-bold text-zinc-500 rounded mb-1">Select {placeholder}</p>
@@ -26,7 +22,7 @@ function Dropdown({ placeholder, results = arrayPrueba, onSelect }: dropdownProp
         {
           results?.length ?
             results?.map((option: dropdownOptions) => {
-              return <li key={option.name} className="font-bold pl-4 text-zinc-500 min-w-max flex items-center h-8 border-b-2 hover:bg-zinc-400 hover:text-white transition-all cursor-pointer last-of-type:border-b-0" onClick={() => handlerSelect(option.url)}>{option.name}</li>
+              return <li key={option.name} className="font-bold pl-4 text-zinc-500 min-w-max flex items-center h-8 border-b-2 hover:bg-zinc-400 hover:text-white transition-all cursor-pointer last-of-type:border-b-0" onClick={() => onSelect(option.url)}>{option.name}</li>
             })
             : <p>No data</p>
         }
