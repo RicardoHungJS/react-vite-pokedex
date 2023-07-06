@@ -14,12 +14,12 @@ const HeaderComponent = () => {
 
   useEffect(() => {
     if (listData) {
-      console.log(listData?.results);
+      // console.log(listData?.results);
     }
   }, [listData])
 
   const selectRegion = (url: string) => {
-    console.log(url);
+    // console.log(url);
   }
 
   return (
